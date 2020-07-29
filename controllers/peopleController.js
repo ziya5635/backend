@@ -20,5 +20,12 @@ const people = [
 module.exports = {
 	index: (req, res) => {
 		res.json(people);
+	},
+
+	info: (req, res) => {
+		const date = new Date();
+		res.send(`<p>Phonebook has info for ${people.length} people.</p>
+			<p>${date.toUTCString()}</p>`);
+		
 	}
 }

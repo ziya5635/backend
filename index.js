@@ -11,7 +11,7 @@ app.set('port', process.env.PORT || 3000);
 
 
 app.get('/api/people', noteController.index);
-
+app.get('/info', noteController.info);
 
 app.listen(app.get('port'), () => {
 	console.log(`App is running on port ${app.get('port')}`);
