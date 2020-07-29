@@ -1,3 +1,5 @@
+
+
 const people = [
 	{
 		name: 'Reza',
@@ -27,5 +29,14 @@ module.exports = {
 		res.send(`<p>Phonebook has info for ${people.length} people.</p>
 			<p>${date.toUTCString()}</p>`);
 		
+	},
+	show: (req, res, next) => {
+		const id = req.params.id;
+		const person = people.find(pr => pr.id == id);
+		if (person) {
+			res.json(person)
+		} else {
+			next();
+		}
 	}
 }
