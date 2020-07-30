@@ -1,6 +1,6 @@
 
 
-const people = [
+let people = [
 	{
 		name: 'Reza',
 		number: '234232',
@@ -38,5 +38,10 @@ module.exports = {
 		} else {
 			next();
 		}
+	},
+	delete: (req, res) => {
+		const id = req.params.id;
+		people = people.filter(person => person.id != id);
+		res.status(204).send('Item deleted successfully.');
 	}
 }
