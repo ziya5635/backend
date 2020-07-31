@@ -19,6 +19,8 @@ let people = [
 
 ]
 
+const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
+
 module.exports = {
 	index: (req, res) => {
 		res.json(people);
@@ -45,9 +47,8 @@ module.exports = {
 		res.status(204).send('Item deleted successfully.');
 	},
 	create: (req, res) => {
-		//Math.random() implement a random id generator here.
 		const data = req.body;console.log(data);
-		people = people.concat({name:data.name, number: data.number, id: people.length+1});
+		people = people.concat({name:data.name, number: data.number, id: getRandomInt(1000000)});
 		res.json(people);
 	}
 }
