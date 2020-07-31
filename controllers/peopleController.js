@@ -43,5 +43,11 @@ module.exports = {
 		const id = req.params.id;
 		people = people.filter(person => person.id != id);
 		res.status(204).send('Item deleted successfully.');
+	},
+	create: (req, res) => {
+		//Math.random() implement a random id generator here.
+		const data = req.body;console.log(data);
+		people = people.concat({name:data.name, number: data.number, id: people.length+1});
+		res.json(people);
 	}
 }
