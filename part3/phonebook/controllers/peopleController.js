@@ -21,6 +21,13 @@ let people = [
 
 const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
 
+const checkNull = obj => {
+	if (obj.name && obj.number) {
+		return true
+	}return false
+}
+const checkRepetition = (name, phonebook) => phonebook.filter(person => person.name === name);
+
 module.exports = {
 	index: (req, res) => {
 		res.json(people);
@@ -47,8 +54,16 @@ module.exports = {
 		res.status(204).send('Item deleted successfully.');
 	},
 	create: (req, res) => {
-		const data = req.body;console.log(data);
-		people = people.concat({name:data.name, number: data.number, id: getRandomInt(1000000)});
-		res.json(people);
+		const data = req.body;
+		if (!checkNull(data)) {
+			res.status('406').send('Name and number required.');
+		}
+		if (!checkRepetition(data.name, people).length) {
+			people = people.concat({name:data.name, number: data.number, id: getRandomInt(1000000)});
+			res.json(people);
+		} else {
+			res.status('406').send('Name must be unique.');
+		}
+
 	}
 }
