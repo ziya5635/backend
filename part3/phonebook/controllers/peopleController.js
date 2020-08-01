@@ -55,12 +55,13 @@ module.exports = {
 	},
 	create: (req, res) => {
 		const data = req.body;
+		const newPerson = {name:data.name, number: data.number, id: getRandomInt(1000000)};
 		if (!checkNull(data)) {
 			res.status('406').send('Name and number required.');
 		}
 		if (!checkRepetition(data.name, people).length) {
-			people = people.concat({name:data.name, number: data.number, id: getRandomInt(1000000)});
-			res.json(people);
+			people = people.concat(newPerson);
+			res.json(newPerson);
 		} else {
 			res.status('406').send('Name must be unique.');
 		}
