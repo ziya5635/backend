@@ -1,12 +1,14 @@
 const express = require('express'),
 	peopleController = require('./controllers/peopleController'),
-	errorController = require('./controllers/errorController');
+	errorController = require('./controllers/errorController'),
+	morgan = require('morgan');
 
 const app = express()
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use(morgan('combined'));
 
 
 
