@@ -25,3 +25,5 @@ app.post('/api/people', peopleController.create);
 app.listen(app.get('port'), () => {
 	console.log(`App is running on port ${app.get('port')}`);
 });
+
+// Heroku address: https://pacific-depths-91692.herokuapp.com/
