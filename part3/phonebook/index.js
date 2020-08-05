@@ -24,6 +24,7 @@ app.delete('/api/people/:id', peopleController.delete);
 app.post('/api/people', peopleController.create);
 app.put('/api/people/:id', peopleController.update);
 
+app.use(errorController.report);
 app.listen(app.get('port'), () => {
 	console.log(`App is running on port ${app.get('port')}`);
 });

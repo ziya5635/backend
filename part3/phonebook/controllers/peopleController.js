@@ -1,46 +1,65 @@
 const Person = require('../models/Person');
 const db = require('./dbController');
 
-//const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
-
 const checkNull = obj => {
 	if (obj.name && obj.number) {
 		return true
 	}return false
 }
-//const checkRepetition = (name, phonebook) => phonebook.filter(person => person.name === name);
 
 module.exports = {
-	index: (req, res) => {
+	index: (req, res, next) => {
 		Person.find({})
 			.then(people => {
 				res.json(people);
 			})
-				.catch(err => console.log(err.message));
+			.catch(err => {
+				next(err);
+			});
 	},
 
-	info: (req, res) => {
+	info: (req, res, next) => {
 		const date = new Date();
 		Person.find({})
 			.then(people => {
 				res.send(`<p>Phonebook has info for ${people.length} people.</p><p>${date.toUTCString()}</p>`);
 			})
-				.catch(err => {console.log(err.message)});
+			.catch(err => {
+				next(err);
+			});
 		
 	},
-	show: (req, res) => {
+	show: (req, res, next) => {
 		const id = req.params.id;
 		Person.findById(id)
-			.then(person => {res.json(person)})
-				.catch(err => {res.status(404).send('resource not found.')});
+			.then(person => {
+				if (person) {
+					res.json(person);
+				} else {
+					res.status(404).send('resource not found.');
+				}
+			
+			})
+			.catch(err => {
+				next(err);
+			});
 	},
-	delete: (req, res) => {
+	delete: (req, res, next) => {
 		const id = req.params.id;
 		Person.findByIdAndDelete(id)
-			.then(person => {res.status(204).send(`${person.name} deleted successfully.`)})
-				.catch(err => console.log(err.message));
+			.then(person => {
+				console.log(`${person.name} deleted.`);
+				if (person) {
+					res.status(204).send(`${person.name} deleted successfully.`);
+				} else {
+					res.status(404).send('resource not found.');
+				}
+				})
+			.catch(err => {
+				next(err);
+			});
 	},
-	create: (req, res) => {
+	create: (req, res, next) => {
 		const data = req.body;
 		const newPerson = {name:data.name, number: data.number};
 		if (!checkNull(data)) {
@@ -56,14 +75,24 @@ module.exports = {
 					res.status('406').send('Name must be unique.');
 				}
 			})
-			.catch(err => {console.log(err.message)});
+			.catch(err => {
+				next(err);
+			});
 
 	},
-	update: (req, res) => {
+	update: (req, res, next) => {
 		const id = req.params.id;
 		const data = req.body;
-		Person.findByIdAndUpdate(id, data)
-			.then(response => res.json(response))
-				.catch(err => {console.log(err.message)});
+		Person.findByIdAndUpdate(id, data, {new: true})
+			.then(response => {
+				if (response) {
+					res.json(response);
+				} else {
+					res.status('404').send('resource not found.');
+				}
+			})
+			.catch(err => {
+				next(err);
+			});
 	}
 }
