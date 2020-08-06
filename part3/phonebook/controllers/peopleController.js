@@ -61,23 +61,12 @@ module.exports = {
 	},
 	create: (req, res, next) => {
 		const data = req.body;
-		const newPerson = {name:data.name, number: data.number};
 		if (!checkNull(data)) {
 			res.status('406').send('Name and number required.');
 		}
-		Person.findOne({name: data.name})
-			.then(response => {
-				if (!response) {
-					Person.create(newPerson)
-						.then(item => {res.json(item)})
-							.catch(err => {console.log(err.message)})
-				} else {
-					res.status('406').send('Name must be unique.');
-				}
-			})
-			.catch(err => {
-				next(err);
-			});
+		Person.create(data)
+			.then(response => {res.json(response)})
+				.catch(err => {next(err)});
 
 	},
 	update: (req, res, next) => {
