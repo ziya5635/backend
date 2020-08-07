@@ -6,7 +6,7 @@ const express = require('express'),
 	errorController = require('./controllers/errorController'),
 	morgan = require('morgan');
 	
-const app = express()
+const app = express();
 
 app.set('port', process.env.PORT);
 app.use(express.urlencoded({extended: true}));

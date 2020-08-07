@@ -13,7 +13,7 @@ mongoose.connect(`mongodb+srv://fullstack:${password}@cluster0.0i6mi.mongodb.net
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  console.log('connected');
+	console.log('connected');
 });
 
 
@@ -23,12 +23,12 @@ const Person = mongoose.model('Person', personSchema);
 const create = (name, number) => {
 	Person.create({name: name, number: number})
 		.then(res => {
-			console.log(`Added ${name} number ${number} to phonebook.`);
+			console.log(`Added ${res.name} number ${res.number} to phonebook.`);
 			mongoose.connection.close();
 		})
 		.catch(err => console.log(err.message));
 
-}
+};
 
 if (process.argv.length === 3) {
 	Person.find({})

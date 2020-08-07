@@ -1,12 +1,6 @@
 const Person = require('../models/Person');
 const db = require('./dbController');
 
-const checkNull = obj => {
-	if (obj.name && obj.number) {
-		return true
-	}return false
-}
-
 module.exports = {
 	index: (req, res, next) => {
 		Person.find({})
@@ -54,25 +48,21 @@ module.exports = {
 				} else {
 					res.status(404).send('resource not found.');
 				}
-				})
+			})
 			.catch(err => {
 				next(err);
 			});
 	},
 	create: (req, res, next) => {
 		const data = req.body;
-		if (!checkNull(data)) {
-			res.status('406').send('Name and number required.');
-		}
 		Person.create(data)
 			.then(response => {res.json(response)})
-				.catch(err => {next(err)});
-
+			.catch(err => {next(err)});
 	},
 	update: (req, res, next) => {
 		const id = req.params.id;
 		const data = req.body;
-		Person.findByIdAndUpdate(id, data, {new: true})
+		Person.findByIdAndUpdate(id, data, {new: true, runValidators: true})
 			.then(response => {
 				if (response) {
 					res.json(response);
