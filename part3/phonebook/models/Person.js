@@ -27,27 +27,10 @@ personSchema.set('toJSON', {
 personSchema.plugin(uniqueValidator);
 
 personSchema.statics.checkNumberValidity = function(num){
-	if (num < 10000000) {
+	if (num < 10000000 || !Number(num)) {
 		return false;
 	}return true;
 }
-
-
-/*https://mongoosejs.com/docs/middleware.html#notes
-
-personSchema.pre('', async function(next){console.log('hey');
-	const docToUpdate = await this.model.findOne(this.getQuery());
-	if (docToUpdate < 10000000) {
-		throw mongoose.Error.ValidationError();
-	}else {
-		next();
-	}
-})
-
-schema.pre('findOneAndUpdate', async function() {
-  const docToUpdate = await this.model.findOne(this.getQuery());
-  console.log(docToUpdate); // The document that `findOneAndUpdate()` will modify
-});*/
 
 
 module.exports = mongoose.model('Person', personSchema);

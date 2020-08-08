@@ -63,7 +63,7 @@ module.exports = {
 		const id = req.params.id;
 		const data = req.body;
 		if (Person.checkNumberValidity(data.number)) {
-				Person.findByIdAndUpdate(id, data, {new: true})
+			Person.findByIdAndUpdate(id, data, {new: true})
 				.then(response => {
 					if (response) {
 						res.json(response);
@@ -75,7 +75,7 @@ module.exports = {
 					next(err);
 				});
 		} else {
-			throw new RangeError('Number is not valid, it should contain at least 8 numbers.');
+			throw new RangeError('Number is not valid, it should be at least 8 numbers.');
 		}
 
 
