@@ -62,16 +62,22 @@ module.exports = {
 	update: (req, res, next) => {
 		const id = req.params.id;
 		const data = req.body;
-		Person.findByIdAndUpdate(id, data, {new: true, runValidators: true})
-			.then(response => {
-				if (response) {
-					res.json(response);
-				} else {
-					res.status('404').send('resource not found.');
-				}
-			})
-			.catch(err => {
-				next(err);
-			});
+		if (Person.checkNumberValidity(data.number)) {
+				Person.findByIdAndUpdate(id, data, {new: true})
+				.then(response => {
+					if (response) {
+						res.json(response);
+					} else {
+						res.status('404').send('resource not found.');
+					}
+				})
+				.catch(err => {
+					next(err);
+				});
+		} else {
+			throw new RangeError('Number is not valid, it should contain at least 8 numbers.');
+		}
+
+
 	}
 }
