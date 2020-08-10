@@ -44,7 +44,7 @@ let testData = [
 	},
 	{
 	  _id: '5a422aa71b54a67sfaw4d17f8',
-      title: 'Go To Statement Considered Harmful',
+      title: 'Java',
       author: 'Edsger W. Dijkstra',
       url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
       likes: 5,
@@ -77,5 +77,11 @@ describe('favoriteBlog', () => {
 describe('mostBlogs', () => {
 	test('of testData should be Edsger W.', () => {
 		expect(list_helper.mostBlogs(testData)).toEqual({author:'Edsger W. Dijkstra', blogs:3})
+	})
+})
+
+describe('mostLikes', () => {
+	test('of testData is Mike', () => {
+		expect(list_helper.mostLikes(testData)).toEqual({author: 'Mike', likes: 6})
 	})
 })

@@ -34,4 +34,9 @@ const mostBlogs = blogs => {
 	return	{author: name, blogs:authors_frequency[name]}
 }
 
-module.exports = {dummy, totalLikes, favoriteBlog, mostBlogs}
+const mostLikes = blogs => {
+	const selected = blogs.reduce((a, b) => a.likes > b.likes ? a : b)
+	return {author: selected.author, likes: selected.likes}
+}
+
+module.exports = {dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes}
