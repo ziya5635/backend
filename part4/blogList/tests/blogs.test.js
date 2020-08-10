@@ -43,3 +43,9 @@ describe('sum', () => {
 		expect(list_helper.totalLikes(testData)).toBe(14)
 	})
 })
+
+describe('favoriteBlog', () => {
+	test('of testData should be Python blog', () => {
+		expect(list_helper.favoriteBlog(testData)).toEqual(testData[2])
+	})
+})
