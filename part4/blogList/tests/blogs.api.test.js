@@ -93,6 +93,18 @@ test(`likes get zero value when it's not defined`, async () => {
 	}
 })
 
+test(`gets 400 error code when title and url missing`, async () => {
+	const obj = {author: 'Aleksi', likes: 3}
+	try {
+		await api
+		.post('/api/blogs')
+		.send(obj)
+		.expect(400)
+	} catch(ex) {
+		console.log(ex);
+	}
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
