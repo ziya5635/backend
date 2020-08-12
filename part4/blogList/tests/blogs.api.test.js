@@ -69,15 +69,27 @@ test(`unique identifier is id`, async () => {
 	}
 })
 
-test(`creating a new blog`, async () => {
+test(`creating a new blog makes the collection one size bigger`, async () => {
 	const newBlog = {title: 'javascript', author:'Mikko', url:'someUrl', likes:8}
 	try {
 		const before = await api.get('/api/blogs')
 		await api.post('/api/blogs').send(newBlog)
 		const after = await api.get('/api/blogs')
 		expect(after.body).toHaveLength(before.body.length+1)
-	} catch(e) {
-		console.log(e);
+	} catch(ex) {
+		console.log(ex);
+	}
+})
+
+test(`likes get zero value when it's not defined`, async () => {
+	const newBlog = {title: 'Metasploit', author:'Jack', url:'someUrl'}
+	try {
+		await api.post('/api/blogs').send(newBlog)
+		const res = await api.get('/api/blogs')
+		const jack = await Blog.findOne({author: 'Jack'})
+		expect(jack.likes).toBe(0)
+	} catch(ex) {
+		console.log(ex);
 	}
 })
 
