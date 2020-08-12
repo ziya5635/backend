@@ -69,6 +69,18 @@ test(`unique identifier is id`, async () => {
 	}
 })
 
+test(`creating a new blog`, async () => {
+	const newBlog = {title: 'javascript', author:'Mikko', url:'someUrl', likes:8}
+	try {
+		const before = await api.get('/api/blogs')
+		await api.post('/api/blogs').send(newBlog)
+		const after = await api.get('/api/blogs')
+		expect(after.body).toHaveLength(before.body.length+1)
+	} catch(e) {
+		console.log(e);
+	}
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
