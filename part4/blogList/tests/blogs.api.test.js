@@ -59,6 +59,16 @@ test(`There are ${initialBlogs.length} inside db`, async () => {
 
 })
 
+test(`unique identifier is id`, async () => {
+	try {
+		const res = await api.get('/api/blogs')
+		const firstObj = res.body[0]
+		expect(firstObj['id']).toBeDefined()
+	} catch(e) {
+		console.log(e);
+	}
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
