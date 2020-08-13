@@ -28,7 +28,6 @@ beforeEach(async () => {
 		console.log('inserting new data to db.')
 		await Blog.deleteMany({})
 		const blogs = await Blog.create(initialBlogs)
-		console.log(`blogs created: ${blogs}`)
 	} catch(ex) {
 		console.log(ex);
 	}
@@ -103,6 +102,21 @@ test(`gets 400 error code when title and url missing`, async () => {
 	} catch(ex) {
 		console.log(ex);
 	}
+})
+
+test(`delete a blog from db`, async () => {
+	try {
+		const blogs = await api.get('/api/blogs')
+		const blogToRemove = blogs.body[0]
+		await api.delete(`/api/blogs/${blogToRemove.id}`)
+		.expect(204)
+		const updated = await api.get('/api/blogs')
+		expect(updated.body).toHaveLength(blogs.body.length-1)
+	} catch(ex) {
+		console.log(ex);
+	}
+
+
 })
 
 afterAll(() => {
