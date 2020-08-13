@@ -116,7 +116,20 @@ test(`delete a blog from db`, async () => {
 		console.log(ex);
 	}
 
+})
 
+
+test(`update a blog in db`, async () => {
+	const newData = {likes:11}
+	try {
+		const blogs = await api.get('/api/blogs');
+		const blogToUpdate = blogs.body[0]
+		await api.put(`/api/blogs/${blogToUpdate.id}`)
+		.send(newData)
+		.expect(200)
+	} catch(ex) {
+		console.log(ex);
+	}
 })
 
 afterAll(() => {

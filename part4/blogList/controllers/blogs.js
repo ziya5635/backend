@@ -32,12 +32,32 @@ blogsRouter.post('/', async (request, response, next) => {
 })
 
 blogsRouter.delete('/:id', async (req, res, next) => {
-  const id = req.params.id
   try {
-    await Blog.findByIdAndDelete(id)
-    res.status(204).end()
+    const id = req.params.id
+    const deleted = await Blog.findByIdAndDelete(id)
+    if (deleted) {
+      res.status(204).end()
+    } else {
+      res.status(400).end()
+    }
+    
   } catch(ex) {
     next(ex)
+  }
+})
+
+blogsRouter.put('/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id
+    const data = req.body
+    const updated = await Blog.findByIdAndUpdate(id, data, {new: true})
+    if (updated) {
+      res.status(200).end()
+    } else {
+      res.status(400).end()
+    }
+  } catch(ex) {
+    console.log(ex);
   }
 })
 
