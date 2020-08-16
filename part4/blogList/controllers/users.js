@@ -15,15 +15,16 @@ userRouter.get('/', async (req, res, next) => {
 userRouter.post('/', async (req, res, next) => {
 	try {
 		const body = req.body
-		const saltRounds = 10
-		const hashedPass = await bcrypt.hash(body.password, saltRounds)
-		body.password = hashedPass
-		const newUser = await User.create(body)
-		if (newUser) {
-			res.status(200).json(newUser)
-		} else {
-			res.status(400).end()
+		if (body.password) {
+			if (body.password.length < 3) {
+				res.status(400).send('password must be at least 3 charecters.')
+			}
+			const saltRounds = 10
+			const hashedPass = await bcrypt.hash(body.password, saltRounds)
+			body.password = hashedPass
 		}
+		const newUser = await User.create(body)
+		res.status(200).json(newUser)
 	} catch(err) {
 		next(err)
 	}
