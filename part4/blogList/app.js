@@ -11,7 +11,7 @@ const middleware = require('./utils/middleware')
 
 logger.info(`Connecting to ${config.MONGODB_URI}`)
 
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
 	.then(res => {logger.info('Successfully connected to MONGODB.')})
 	.catch(err => {logger.error(`Failed to connect to MONGODB because ${err.message}`)})
 

@@ -44,6 +44,8 @@ beforeEach(async () => {
 
 describe('testing with inital data', () => {
 	test('all users returned in json', async() => {
+		const allUsers = await api.get('/api/users')
+		logger.info(allUsers.body)
 		await api.get('/api/users')
 		.expect(200)
 		.expect('Content-Type', /application\/json/)

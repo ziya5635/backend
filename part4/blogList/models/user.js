@@ -15,7 +15,8 @@ const userSchema = new Schema({
 	password: {
 		type: String,
 		required: true,
-	}
+	},
+	blogs: [{type: Schema.Types.ObjectId, ref: 'Blog'}]
 })
 
 userSchema.set('toJSON', {
@@ -30,4 +31,4 @@ userSchema.set('toJSON', {
 
 userSchema.plugin(uniqueValidator)
 
-module.exports = new mongoose.model('user', userSchema)
+module.exports = mongoose.model('User', userSchema)

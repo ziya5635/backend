@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const logger = require('../utils/logger')
+const User = require('../models/user')
 
 const api = supertest(app)
 
@@ -23,13 +25,42 @@ const initialBlogs = [
 
 ]
 
+const initialUsers = [
+	{
+		username: 'reza5635',
+		name: 'Reza',
+		password: 'Reyhan'
+	},
+	{
+		username: 'sina8102',
+		name: 'Sina',
+		password: 'lasfj23'
+	}
+
+]
+
 beforeEach(async () => {
 	try {
 		console.log('inserting new data to db.')
+
+		await User.deleteMany({})
+		const userPromises = initialUsers.map(async user => {
+			const res = await api.post('/api/users').send(user)
+			return res
+		})
+		await Promise.all(userPromises)
+
 		await Blog.deleteMany({})
-		const blogs = await Blog.create(initialBlogs)
+		const blogPromises = initialBlogs.map(async blog => {
+			const res = await api.post('/api/blogs').send(blog)
+			return res
+				
+		})
+		await Promise.all(blogPromises)
+
 	} catch(ex) {
-		console.log(ex);
+		logger.error(ex.message)
+		next(ex)
 	}
 
 })
@@ -42,12 +73,15 @@ test('all notes returned as json', async () => {
 			.get('/api/blogs')
 			.expect(200)
 			.expect('Content-Type', /application\/json/)
+		const blogs = await api.get('/api/blogs')
+		logger.info(blogs.body)
 	} catch(ex) {
 		console.log(ex);
 	}
 
 })
 
+/*
 test(`There are ${initialBlogs.length} inside db`, async () => {
 	try {
 		const response = await api.get('/api/blogs')
@@ -130,7 +164,7 @@ test(`update a blog in db`, async () => {
 	} catch(ex) {
 		console.log(ex);
 	}
-})
+})*/
 
 afterAll(() => {
 	mongoose.connection.close()

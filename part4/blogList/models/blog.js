@@ -1,11 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 
-const blogSchema = mongoose.Schema({
+
+const blogSchema = new Schema({
   title: String,
   author: String,
   url: String,
-  likes: {type:Number, default:0}
+  likes: {type:Number, default:0},
+  user: {type:Schema.Types.ObjectId, ref:'User'}
 })
 
 blogSchema.set('toJSON', {
