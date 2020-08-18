@@ -81,7 +81,7 @@ test('all notes returned as json', async () => {
 
 })
 
-/*
+
 test(`There are ${initialBlogs.length} inside db`, async () => {
 	try {
 		const response = await api.get('/api/blogs')
@@ -164,7 +164,7 @@ test(`update a blog in db`, async () => {
 	} catch(ex) {
 		console.log(ex);
 	}
-})*/
+})
 
 afterAll(() => {
 	mongoose.connection.close()
