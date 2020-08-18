@@ -65,7 +65,7 @@ beforeEach(async () => {
 
 })
 
-
+/*
 
 test('all notes returned as json', async () => {
 	try {
@@ -164,6 +164,23 @@ test(`update a blog in db`, async () => {
 	} catch(ex) {
 		console.log(ex);
 	}
+})
+*/
+
+test('create a new blog once signed in', async () => {
+	const user = await api.post('/api/login').send({username: initialUsers[1].username,
+	 												password: initialUsers[1].password})
+	logger.info(user.body)
+	const data = {title: 'geography', author: user.body.name, likes: 23, url: 'www'}
+	const blog = await api.post('/api/blogs').set('Authorization', `bearer ${user.body.token}`).send(data).expect(201)
+	expect(blog.body.title).toBeDefined()
+	logger.info('new blog:', blog.body)
+})
+
+test('face a 401 error when logged out', async () => {
+	const data = {title: 'history', author: 'Sara', likes:3, url: 'www'}
+	const result = await api.post('/api/blogs').send(data).expect(401)
+	expect(result.body.title).toBeUndefined()
 })
 
 afterAll(() => {
