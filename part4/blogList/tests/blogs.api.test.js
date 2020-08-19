@@ -183,6 +183,31 @@ test('face a 401 error when logged out', async () => {
 	expect(result.body.title).toBeUndefined()
 })
 
+test('successful delete when logged in', async () => {
+	const user = await api.post('/api/login').send({username: initialUsers[0].username,
+	 												password: initialUsers[0].password})
+	logger.info(user.body)
+	const data = {title: 'geography', author: user.body.name, likes: 23, url: 'www'}
+	const blog = await api.post('/api/blogs').set('Authorization', `bearer ${user.body.token}`).send(data).expect(201)
+	expect(blog.body.title).toBeDefined()
+	
+	await api.delete(`/api/blogs/${blog.body.id}`).set('Authorization', `bearer ${user.body.token}`)
+	.expect(204)
+})
+
+test('Unable to delete when no token given', async () => {
+	const user = await api.post('/api/login').send({username: initialUsers[1].username,
+	 												password: initialUsers[1].password})
+	logger.info(user.body)
+	const data = {title: 'geography', author: user.body.name, likes: 23, url: 'www'}
+	const blog = await api.post('/api/blogs').set('Authorization', `bearer ${user.body.token}`).send(data).expect(201)
+	expect(blog.body.title).toBeDefined()
+	
+	await api.delete(`/api/blogs/${blog.body.id}`)
+	.expect(401)
+	
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
