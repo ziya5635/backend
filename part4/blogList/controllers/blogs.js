@@ -15,18 +15,10 @@ blogsRouter.get('/', async (request, response, next) => {
   
 })
 
-const getToken = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-}
-
 blogsRouter.post('/', async (request, response, next) => {
   try {
     const body = request.body
-    const token = getToken(request)
+    const token = request.token
     if (!token) {
       return response.status(401).json({error: 'token missing.'})
     }
