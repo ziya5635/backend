@@ -33,8 +33,9 @@ blogsRouter.post('/', async (request, response, next) => {
         return response.status(400).end()
     } else {
       const result = await blog.save()
-      user.blogs = user.blogs.concat(result._id)
-      await user.save()
+      //user.blogs = user.blogs.concat(result._id)
+      //await user.save()
+      await User.findByIdAndUpdate(user._id, {$push: {blogs: result._id}})
       return response.status(201).json(result)
     }
 
@@ -70,16 +71,24 @@ blogsRouter.delete('/:id', async (req, res, next) => {
 
 blogsRouter.put('/:id', async (req, res, next) => {
   try {
+    const token = req.token
+    if (!token) {
+      res.status(401).json({error: 'token missing.'})
+    }
+    const userId = jwt.verify(token, config.SECRET).id
+    const user = await User.findById(userId)
     const id = req.params.id
     const data = req.body
-    const updated = await Blog.findByIdAndUpdate(id, data, {new: true})
-    if (updated) {
+    const blog = await Blog.findById(id)
+    if (blog.user.toString() === userId.toString()) {
+      await Blog.findByIdAndUpdate(id, data, {new: true})
       return res.status(200).end()
-    } else {
-      return res.status(400).end()
+    }else {
+      return res.status(401).json({error: 'Unauthorized request.'})
     }
+
   } catch(ex) {
-    console.log(ex);
+    next(ex)
   }
 })
 

@@ -51,8 +51,11 @@ beforeEach(async () => {
 		await Promise.all(userPromises)
 
 		await Blog.deleteMany({})
+		const user = await api.post('/api/login').send({username: 'reza5635', password: 'Reyhan'})
+		logger.info(user.body)
 		const blogPromises = initialBlogs.map(async blog => {
-			const res = await api.post('/api/blogs').send(blog)
+			const res = await api.post('/api/blogs').set('Authorization', `bearer ${user.body.token}`).send(blog)
+			//logger.info('//////',res.body)
 			return res
 				
 		})
@@ -60,14 +63,12 @@ beforeEach(async () => {
 
 	} catch(ex) {
 		logger.error(ex.message)
-		next(ex)
 	}
 
 })
 
-/*
 
-test('all notes returned as json', async () => {
+test('all blogs returned as json', async () => {
 	try {
 		await api
 			.get('/api/blogs')
@@ -106,8 +107,10 @@ test(`creating a new blog makes the collection one size bigger`, async () => {
 	const newBlog = {title: 'javascript', author:'Mikko', url:'someUrl', likes:8}
 	try {
 		const before = await api.get('/api/blogs')
-		await api.post('/api/blogs').send(newBlog)
+		const user = await api.post('/api/login').send({username: 'sina8102', password: 'lasfj23'})
+		await api.post('/api/blogs').set('Authorization', `bearer ${user.body.token}`).send(newBlog)
 		const after = await api.get('/api/blogs')
+		expect(201)
 		expect(after.body).toHaveLength(before.body.length+1)
 	} catch(ex) {
 		console.log(ex);
@@ -117,7 +120,8 @@ test(`creating a new blog makes the collection one size bigger`, async () => {
 test(`likes get zero value when it's not defined`, async () => {
 	const newBlog = {title: 'Metasploit', author:'Jack', url:'someUrl'}
 	try {
-		await api.post('/api/blogs').send(newBlog)
+		const user = await api.post('/api/login').send({username: 'sina8102', password: 'lasfj23'})
+		await api.post('/api/blogs').set('Authorization', `bearer ${user.body.token}`).send(newBlog)
 		const res = await api.get('/api/blogs')
 		const jack = await Blog.findOne({author: 'Jack'})
 		expect(jack.likes).toBe(0)
@@ -129,8 +133,10 @@ test(`likes get zero value when it's not defined`, async () => {
 test(`gets 400 error code when title and url missing`, async () => {
 	const obj = {author: 'Aleksi', likes: 3}
 	try {
+		const user = await api.post('/api/login').send({username: 'sina8102', password: 'lasfj23'})
 		await api
 		.post('/api/blogs')
+		.set('Authorization', `bearer ${user.body.token}`)
 		.send(obj)
 		.expect(400)
 	} catch(ex) {
@@ -140,9 +146,10 @@ test(`gets 400 error code when title and url missing`, async () => {
 
 test(`delete a blog from db`, async () => {
 	try {
+		const user = await api.post('/api/login').send({username: 'reza5635', password: 'Reyhan'})
 		const blogs = await api.get('/api/blogs')
 		const blogToRemove = blogs.body[0]
-		await api.delete(`/api/blogs/${blogToRemove.id}`)
+		await api.delete(`/api/blogs/${blogToRemove.id}`).set('Authorization', `bearer ${user.body.token}`)
 		.expect(204)
 		const updated = await api.get('/api/blogs')
 		expect(updated.body).toHaveLength(blogs.body.length-1)
@@ -156,16 +163,17 @@ test(`delete a blog from db`, async () => {
 test(`update a blog in db`, async () => {
 	const newData = {likes:11}
 	try {
-		const blogs = await api.get('/api/blogs');
+		const user = await api.post('/api/login').send({username: 'reza5635', password: 'Reyhan'})
+		const blogs = await api.get('/api/blogs')
 		const blogToUpdate = blogs.body[0]
-		await api.put(`/api/blogs/${blogToUpdate.id}`)
+		await api.put(`/api/blogs/${blogToUpdate.id}`).set('Authorization', `bearer ${user.body.token}`)
 		.send(newData)
 		.expect(200)
 	} catch(ex) {
 		console.log(ex);
 	}
 })
-*/
+
 
 test('create a new blog once signed in', async () => {
 	const user = await api.post('/api/login').send({username: initialUsers[1].username,
