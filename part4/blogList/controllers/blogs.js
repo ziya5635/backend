@@ -33,8 +33,6 @@ blogsRouter.post('/', async (request, response, next) => {
         return response.status(400).end()
     } else {
       const result = await blog.save()
-      //user.blogs = user.blogs.concat(result._id)
-      //await user.save()
       await User.findByIdAndUpdate(user._id, {$push: {blogs: result._id}})
       return response.status(201).json(result)
     }
